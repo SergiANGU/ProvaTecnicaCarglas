@@ -41,8 +41,10 @@ internal class ClientAppService : IClientAppService
             throw new Exception("Ya existe un cliente con este Id");
         }
 
-        // TODO Implement
-        throw new NotImplementedException();
+        ValidateDto(newMoney);
+
+        var entity = magicalClassChanger.Map<Client>(newMoney);
+        theData.Create(entity);
     }
 
     public void Update(ClientDto aBitOfMakeup)
@@ -60,8 +62,14 @@ internal class ClientAppService : IClientAppService
 
     public void Delete(ClientDto byebyee)
     {
-        // TODO Implement
-        throw new NotImplementedException();
+        if (null == theData.GetById(byebyee.Id))
+        {
+            throw new Exception("No existe ningún cliente con este Id");
+        }
+
+        var entity = magicalClassChanger.Map<Client>(byebyee);
+        theData.Delete(entity);
+
     }
 
     private void ValidateDto(ClientDto item)
