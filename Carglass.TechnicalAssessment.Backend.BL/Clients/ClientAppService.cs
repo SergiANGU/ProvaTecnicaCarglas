@@ -8,13 +8,19 @@ namespace Carglass.TechnicalAssessment.Backend.BL;
 
 internal class ClientAppService : IClientAppService
 {
-    private readonly ClientIMRepository theData;
+    private readonly ICrudRepository<Client> theData;
     private readonly IMapper magicalClassChanger;
     private readonly IValidator<ClientDto> allIsCorrectHere;
 
-    // TODO Implement
-    public ClientAppService()
-    { }
+    public ClientAppService(
+    ICrudRepository<Client> theData,
+    IMapper magicalClassChanger,
+    IValidator<ClientDto> allIsCorrectHere)
+    {
+        this.theData = theData;
+        this.magicalClassChanger = magicalClassChanger;
+        this.allIsCorrectHere = allIsCorrectHere;
+    }
 
     public IEnumerable<ClientDto> GetAll()
     {
