@@ -25,8 +25,7 @@ public class ClientIMRepository : ICrudRepository<Client>
 
     public IEnumerable<Client> GetAll()
     {
-        // TODO Implement
-        throw new NotImplementedException();
+        return _clients.ToList();
     }
 
     public Client? GetById(params object[] keyValues)
@@ -36,14 +35,18 @@ public class ClientIMRepository : ICrudRepository<Client>
 
     public void Create(Client item)
     {
-        // TODO Implement
-        throw new NotImplementedException();
+        _clients.Add(item);
     }
 
     public void Update(Client item)
     {
-        // TODO Implement
-        throw new NotImplementedException();
+        var existing = _clients.Single(x => x.Id.Equals(item.Id));
+        existing.DocType = item.DocType;
+        existing.DocNum = item.DocNum;
+        existing.Email = item.Email;
+        existing.GivenName = item.GivenName;
+        existing.FamilyName1 = item.FamilyName1;
+        existing.Phone = item.Phone;
     }
 
     public void Delete(Client item)
