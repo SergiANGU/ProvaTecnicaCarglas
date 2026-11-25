@@ -8,78 +8,78 @@ namespace Carglass.TechnicalAssessment.Backend.BL;
 
 internal class ClientAppService : IClientAppService
 {
-    private readonly IClientRepository theData;
-    private readonly IMapper magicalClassChanger;
-    private readonly IValidator<ClientDto> allIsCorrectHere;
+    private readonly IClientRepository _clientRepository;
+    private readonly IMapper _mapper;
+    private readonly IValidator<ClientDto> _clientValidator;
 
     public ClientAppService(
-    IClientRepository theData,
-    IMapper magicalClassChanger,
-    IValidator<ClientDto> allIsCorrectHere)
+    IClientRepository clientRepository,
+    IMapper mapper,
+    IValidator<ClientDto> clientValidator)
     {
-        this.theData = theData;
-        this.magicalClassChanger = magicalClassChanger;
-        this.allIsCorrectHere = allIsCorrectHere;
+        _clientRepository = clientRepository;
+        _mapper = mapper;
+        _clientValidator = clientValidator;
     }
 
     public IEnumerable<ClientDto> GetAll()
     {
-        var moneySpenders = theData.GetAll();
-        return magicalClassChanger.Map<IEnumerable<ClientDto>>(moneySpenders);
+        var clients = _clientRepository.GetAll();
+        return _mapper.Map<IEnumerable<ClientDto>>(clients);
     }
 
     public ClientDto GetById(params object[] keyValues)
     {
-        var theOne = theData.GetById(keyValues);
-        return magicalClassChanger.Map<ClientDto>(theOne);
+        var client = _clientRepository.GetById(keyValues);
+        return _mapper.Map<ClientDto>(client);
     }
 
-    public void Create(ClientDto newMoney)
+    public void Create(ClientDto clientDto)
     {
-        if (null != theData.GetById(newMoney.Id))
+        if (null != _clientRepository.GetById(clientDto.Id))
         {
             throw new Exception("Ya existe un cliente con este Id");
         }
 
-        if (null != theData.GetByDocNum(newMoney.DocNum))
+        if (null != _clientRepository.GetByDocNum(clientDto.DocNum))
         {
             throw new Exception("Ya existe un cliente con este número de documento");
         }
 
-        ValidateDto(newMoney);
+        ValidateDto(clientDto);
 
-        var entity = magicalClassChanger.Map<Client>(newMoney);
-        theData.Create(entity);
+        var client = _mapper.Map<Client>(clientDto);
+        _clientRepository.Create(client);
     }
 
-    public void Update(ClientDto aBitOfMakeup)
+    public void Update(ClientDto clientDto)
     {
-        if (null == theData.GetById(aBitOfMakeup.Id))
+        if (null == _clientRepository.GetById(clientDto.Id))
         {
             throw new Exception("No existe ningún cliente con este Id");
         }
 
-        ValidateDto(aBitOfMakeup);
+        ValidateDto(clientDto);
 
-        var entity = magicalClassChanger.Map<Client>(aBitOfMakeup);
-        theData.Update(entity);
+        var client = _mapper.Map<Client>(clientDto);
+        _clientRepository.Update(client);
     }
 
-    public void Delete(ClientDto byebyee)
+    public void Delete(ClientDto clientDto)
     {
-        if (null == theData.GetById(byebyee.Id))
+        if (null == _clientRepository.GetById(clientDto.Id))
         {
             throw new Exception("No existe ningún cliente con este Id");
         }
 
-        var entity = magicalClassChanger.Map<Client>(byebyee);
-        theData.Delete(entity);
+        var client = _mapper.Map<Client>(clientDto);
+        _clientRepository.Delete(client);
 
     }
 
-    private void ValidateDto(ClientDto item)
+    private void ValidateDto(ClientDto clientDto)
     {
-        var validationResult = allIsCorrectHere.Validate(item);
+        var validationResult = _clientValidator.Validate(clientDto);
         if (validationResult.Errors.Any())
         {
             string toShowErrors = string.Join("; ", validationResult.Errors.Select(s => s.ErrorMessage));
