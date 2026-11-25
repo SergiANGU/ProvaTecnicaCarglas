@@ -8,12 +8,12 @@ namespace Carglass.TechnicalAssessment.Backend.BL;
 
 internal class ClientAppService : IClientAppService
 {
-    private readonly ICrudRepository<Client> theData;
+    private readonly IClientRepository theData;
     private readonly IMapper magicalClassChanger;
     private readonly IValidator<ClientDto> allIsCorrectHere;
 
     public ClientAppService(
-    ICrudRepository<Client> theData,
+    IClientRepository theData,
     IMapper magicalClassChanger,
     IValidator<ClientDto> allIsCorrectHere)
     {
@@ -39,6 +39,11 @@ internal class ClientAppService : IClientAppService
         if (null != theData.GetById(newMoney.Id))
         {
             throw new Exception("Ya existe un cliente con este Id");
+        }
+
+        if (null != theData.GetByDocNum(newMoney.DocNum))
+        {
+            throw new Exception("Ya existe un cliente con este número de documento");
         }
 
         ValidateDto(newMoney);

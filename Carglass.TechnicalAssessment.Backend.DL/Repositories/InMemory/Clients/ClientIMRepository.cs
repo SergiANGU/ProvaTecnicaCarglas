@@ -2,7 +2,7 @@
 
 namespace Carglass.TechnicalAssessment.Backend.DL.Repositories;
 
-public class ClientIMRepository : ICrudRepository<Client>
+public class ClientIMRepository : IClientRepository
 {
     private ICollection<Client> _clients;
 
@@ -54,5 +54,11 @@ public class ClientIMRepository : ICrudRepository<Client>
         var toDeleteItem = _clients.Single(x => x.Id.Equals(item.Id));
 
         _clients.Remove(toDeleteItem);
+    }
+
+    public Client? GetByDocNum(string docNum)
+    {
+        return _clients.FirstOrDefault(x =>
+            string.Equals(x.DocNum, docNum, StringComparison.OrdinalIgnoreCase));
     }
 }
